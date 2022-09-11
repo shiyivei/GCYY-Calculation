@@ -33,12 +33,13 @@ print("OS_BASE_DIR:",OS_BASE_DIR)
 SECRET_KEY = 'django-insecure-w4+q_#9_ru%2$3gr))-sju5@v_^i(dcjn@bnsi1jz2otf52e!4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
+# DEBUG = True
 
 
 
 #请求头，只给安全的网络
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 
 # Application definition
