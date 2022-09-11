@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>心绪健康指数</title>
+    <script src="/static/js/echarts.js"></script>
+    <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+    <script src="/static/js/d3.v4.min.js"></script>
+    <script src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"></script>
+  </head>
+  <body
+    style="
+      background-color: rgb(0, 0, 0);
+      text-align: center;
+    "
+  >
+    <div
+      style="
+        position: relative;
+        top: 90px;
+        color: white;
+        text-align: center;
+        font-size: 36px;
+      "
+    >
+      GCYY指数
+    </div>
+    <div
+      id="main"
+      style="
+        height: 400px;
+        width: 800px;
+        font-size: 12px;
+        background-color: rgb(255, 255, 255);
+        border-radius: 2em;
+        position: relative;
+        left: 80px;
+        top: 140px;
+      "
+    ></div>
+    <br />
+    <div
+      id="main-2"
+      style="
+        position: relative;
+        width: 800px;
+        height: 400px;
+        left: 80px;
+        top: 160px;
+        background-color: white;
+        border-radius: 2em;
+      "
+    ></div>
+
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+    <br />
+
+    <div
+      style="
+        text-align: left;
+        font-size: 13px;
+        width: 730px;
+        margin: 0 auto;
+        line-height: 25px;
+        text-indent: 4em;
+        color: rgb(255, 255, 255);
+        top: 50px;
+        position: relative;
+      "
+    >
+      GCYY 全称为:Golden Centre of Yin&Yang
+      中文全称为：心绪健康指数
+      GCYY计算源自非二科技首席算法科学家刘承宜教授独家专利授权算法
+      心绪健康指数基础原理来自韦伯费希纳定律与诺特定律，基本原理有两点
+      1，主观感受与客观参数成对数关系
+      2，有阴阳就一定有对称性
+      非二将连续的心率、血压等心绪管参数统一定量整合后，得出GCYY心绪健康指数，GCYY指数越高，心绪越健康
+    </div>
+    <br />
+
+    <div
+      style="
+        text-align: center;
+        position: relative;
+        top: 80px;
+        color: white;
+      "
+    >
+      <button
+        style="
+          text-align: left;
+          font-size: 24px;
+          width: 250px;
+          height: 60px;
+          margin: 0 auto;
+          line-height: 25px;
+          text-indent: 4em;
+        "
+        type="button"
+        onclick="{wx.miniProgram.navigateBack({delta: 1});}"
+      >
+        返回
+      </button>
+    </div>
+    <script>
+      var timeset = []; //数组初始化
+      var data_heart = [];
+      var data_pressure_low = [];
+      var data_pressure_high = [];
+      var data_rr = [];
+      let data = [];
+      //获取csv对象
+      d3.csv(
+        "/static/csv/data_analysis_report.csv",
+        function (error, csvdata) {
+          console.log("raw data:", csvdata);
+          if (error) {
+            console.log(error);
+          } else {
+            // debugger;
+            for (
+              var i = 0;
+              i < csvdata.length;
+              i++
+            ) {
+              timeset.push(
+                new Date(csvdata[i].时间)
+              );
+              data.push([
+                +new Date(csvdata[i].time),
+                +csvdata[i].GCYY * 100000,
+              ]);
+              data_heart.push([
+                +new Date(csvdata[i].time),
+                +csvdata[i].心率,
+              ]);
+              data_pressure_low.push([
+                +new Date(csvdata[i].time),
+                +csvdata[i].低压,
+              ]);
+              data_pressure_high.push([
+                +new Date(csvdata[i].time),
+                +csvdata[i].高压,
+              ]);
+              data_rr.push([
+                +new Date(csvdata[i].time),
+                +csvdata[i].RR,
+              ]);
+            }
+            console.log(data_heart);
+
+            var myChart = echarts.init(
+              document.getElementById("main")
+            );
+            var myChart2 = echarts.init(
+              document.getElementById("main-2")
+            );
+
+            option = {
+              tooltip: {
+                trigger: "axis",
+                position: function (pt) {
+                  return [pt[0], "10%"];
+                },
+              },
+              title: {
+                left: "center",
+                // text: "water_data_select_out - GCYY Chart",
+                text: "",
+              },
+              toolbox: {
+                feature: {
+                  dataZoom: {
+                    yAxisIndex: "none",
+                  },
+                  restore: {},
+                  saveAsImage: {},
+                },
+              },
+              xAxis: {
+                type: "time",
+                boundaryGap: false,
+              },
+              yAxis: {
+                type: "value",
+                boundaryGap: [0, "100%"],
+                interval: 50,
+                min: 900,
+                max: 1600,
+              },
+              dataZoom: [
+                {
+                  type: "inside",
+                  start: 0,
+                  end: 100,
+                },
+                {
+                  start: 0,
+                  end: 20,
+                },
+              ],
+              series: [
+                {
+                  name: "GCYY",
+                  type: "line",
+                  smooth: true,
+                  symbol: "none",
+                  // areaStyle: {},
+                  data: data,
+                },
+              ],
+            };
+
+            option_2 = {
+              tooltip: {
+                trigger: "axis",
+                position: function (pt) {
+                  return [pt[0], "10%"];
+                },
+              },
+              // title: {
+              // 	left: 'center',
+              // 	text: 'GCYY Chart'
+              // },
+              legend: {
+                data: [
+                  "心率",
+                  "低压",
+                  "高压",
+                  // "RR",
+                ],
+              },
+              toolbox: {
+                feature: {
+                  dataZoom: {
+                    yAxisIndex: "none",
+                  },
+                  restore: {},
+                  saveAsImage: {},
+                },
+              },
+              xAxis: {
+                type: "time",
+                boundaryGap: false,
+              },
+              yAxis: {
+                type: "value",
+                boundaryGap: [0, "100%"],
+                min: 40,
+                max: 140,
+              },
+              dataZoom: [
+                {
+                  type: "inside",
+                  start: 0,
+                  end: 100,
+                },
+                {
+                  start: 0,
+                  end: 20,
+                },
+              ],
+              series: [
+                {
+                  name: "心率",
+                  type: "line",
+                  smooth: true,
+                  symbol: "none",
+                  // areaStyle: {},
+                  data: data_heart,
+                },
+                {
+                  name: "低压",
+                  type: "line",
+                  smooth: true,
+                  symbol: "none",
+                  // areaStyle: {},
+                  data: data_pressure_low,
+                },
+                {
+                  name: "高压",
+                  type: "line",
+                  smooth: true,
+                  symbol: "none",
+                  // areaStyle: {},
+                  data: data_pressure_high,
+                },
+                // {
+                //   name: "RR",
+                //   type: "line",
+                //   smooth: true,
+                //   symbol: "none",
+                //   // areaStyle: {},
+                //   data: data_rr,
+                // },
+              ],
+            };
+
+            // option = {
+            // 	xAxis: {
+            // 		type: 'category',
+            // 		data: timeset
+            // 	},
+            // 	yAxis: {
+            // 		type: 'value'
+            // 	},
+            // 	series: [
+            // 		{
+            // 		data: numset1,
+            // 		type: 'line',
+            // 		smooth: true
+            // 		}
+            // 	]
+            // };
+
+            myChart.setOption(option);
+            myChart2.setOption(option_2);
+          }
+        }
+      );
+    </script>
+  </body>
+</html>
