@@ -18,11 +18,13 @@ pd_reader = pd.read_csv(file+'.csv')
 # # df = pd_reader.drop(['时间'], axis=1)
 df = pd_reader.copy()
 # print("df:",df)
-print("raw data:",df)
+print("整理后的源数据:",df)
+
+
 
 # 调整1，去除体动大于100的数据
 df = df.drop(df[(df['体动'] > 100)].index)
-print("removed data(体动>100):",df)
+# print("removed data(体动>100):",df)
 
 
 
@@ -38,7 +40,7 @@ df = df.drop(df[(df['低压'] < 40) | (df['高压'] < 80)].index)
 # witoutCol = '低压'
 # df = df.drop(columns=[witoutCol])
 df.reset_index(drop=True, inplace=True)
-print(df)
+# print(df)
 
 
 # ## 一 计算健康标尺
@@ -57,7 +59,9 @@ print("max ----------",GEOMEAN1)
 import math
 # M个数据组结构时中中最大值与最小值的定量差异（最大值与最小值比值以0.618为底取对数，在取绝对值）
 QDMM1 = abs(math.log(max(GEOMEAN1)/min(GEOMEAN1),0.618))
-print(QDMM1)
+
+
+# print(QDMM1)
 
 
 # In[ ]:
@@ -177,19 +181,19 @@ def dataClean(df_yang, df_yin):
 	# print(GEOMEAN2)
 	# 计算所有结构时中的几何均值GM
 	GEOMEAN2_GM = scipy.stats.gmean(GEOMEAN2)
-	print(GEOMEAN2_GM)
+	# print(GEOMEAN2_GM)
 	# print(GEOMEAN2_GM)
 	# 计算每个结构时中与GM的定量差异，计算相继两个结构时中的定量差异，删除其中定量差异大于0.1610的数据组
 	import numpy as np
 	arr = np.array(GEOMEAN2)
 	# todo: #1 check
 	qdmmArray = abs(np.log(arr/GEOMEAN2_GM)/np.log(0.618))
-	print(qdmmArray)
+	# print(qdmmArray)
 	qdmmDiffArray = np.diff(qdmmArray)
-	print(qdmmDiffArray)
+	# print(qdmmDiffArray)
 	indexrResult = np.where(abs(qdmmDiffArray) > 0.1610)
 	# indexrResult = np.where(abs(np.log(arr/GEOMEAN2_GM)/np.log(0.618)) > 0.1610)
-	print(len(indexrResult[0]))
+	# print(len(indexrResult[0]))
 	# tt = []
 	# for i in range(arr.shape[0]-1):		
 	# 	# QDMM_temp = abs(math.log(arr[i+1]/arr[i],0.618))
@@ -248,7 +252,7 @@ print(len(df_all.columns))
 GCYY = scipy.stats.gmean(df_all.iloc[:,1:len(df_all.columns)],axis=1)
 print(GCYY)
 GM = scipy.stats.gmean(GCYY)
-print(GM)
+# print(GM)
 # 计算每个GCYY与GM的定量差异，计算相继两个GCYY的定量差异，
 # 标出其中定量差异大于0.805的数据组，其中GCYY较低的标绿色，GCYY较高的标橙色
 import numpy as np
@@ -265,7 +269,7 @@ print(len(indexrOrange[0]))
 # In[ ]:
 
 # write to csv
-print(df)
+# print(df)
 # import os  
 # os.makedirs('subfolder', exist_ok=True)  
 df_all['GCYY'] = GCYY
@@ -285,7 +289,7 @@ print(df_csv)
 
 # 调整2， 计算每一分钟gcyy的平均值，只评估安静状态的gcyy
 df_csv['time'] = df_csv['time'].dt.floor('T')
-print(df_csv)
+# print(df_csv)
 grouped_df = df_csv.groupby(['time'])
 mean_df = grouped_df.mean()
 mean_df = mean_df.reset_index()
@@ -294,4 +298,4 @@ print(mean_df)
 
 mean_df.to_csv(output, index=False)
 
-
+print("恭喜🎉🎉🎉, 建模处理完毕！")

@@ -112,12 +112,13 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
      # print("well, data has been fetched and saved as raw_data.csv......")
      print("已完成数据整理,☑️")
+     print("正在建模分析中....",p)
      #执行
      # str = ('python3 /Users/qinjianquan/Desktop/FEIER/GCYY/analyze_model.py')
      str = ('python3 python_gcyy/analyze_model.py')
      p= os.system(str)
 
-     print("正在建模分析中....",p)
+     
 
 
 
