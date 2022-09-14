@@ -30,10 +30,24 @@ def index_handler(request):
 
      if request.method == "GET":
 
-          IMEI_number=request.GET.get('IMEI_number',default='F929435DD002')
-          start_time=request.GET.get('start_time',default='1662448705')
-          end_time = request.GET.get('end_time',default='1662535105')
+          # IMEI_number=request.GET.get('IMEI_number',default='F929435DD002')
+          # start_time=request.GET.get('start_time',default='1662448705')
+          # end_time = request.GET.get('end_time',default='1662535105')
 
+          IMEI_number=request.GET.get('IMEI_number',default='0')
+          start_time=request.GET.get('start_time',default='0')
+          end_time = request.GET.get('end_time',default='0')
+
+          if IMEI_number == '0':
+
+               html = "<div style='position: relative;text-align: center;font-size:24px;top:422px;height:500px;background-color: rgb(255, 255, 255);'><h1>未检测到手表，请先绑定</h1><div>"
+               return HttpResponse(html) ;
+
+          if start_time >= end_time:
+
+               html = "<div style='position: relative;text-align: center;font-size:24px;top:422px;height:500px;background-color: rgb(255, 255, 255);'><h1>报告开始时间不能早于结束时间</h1><div>"
+               return HttpResponse(html) 
+  
           print("Got parameters are:",IMEI_number,start_time,end_time)   
 
           get_report(IMEI_number,start_time,end_time)
@@ -45,8 +59,7 @@ def index_handler(request):
 
      else:
 
-          html = "<h1>It's not a GET Request</h1>"
-
+          html = "<h1>这不是一个 GET 请求</h1>"
           return HttpResponse(html) 
 
 

@@ -33,8 +33,8 @@ print("OS_BASE_DIR:",OS_BASE_DIR)
 SECRET_KEY = 'django-insecure-w4+q_#9_ru%2$3gr))-sju5@v_^i(dcjn@bnsi1jz2otf52e!4'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
-# DEBUG = True
+# DEBUG = False
+DEBUG = True
 
 
 
@@ -143,6 +143,7 @@ STATICFILES_DIRS = (
     os.path.join(HERE, 'static/'),
 )
 
+# STATIC_ROOT  = os.path.join(BASE_DIR, 'static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

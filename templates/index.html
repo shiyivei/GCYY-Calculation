@@ -58,30 +58,28 @@
     <br />
     <br />
     <br />
-    <br />
-    <br />
-    <br />
 
     <div
       style="
         text-align: left;
-        font-size: 13px;
-        width: 730px;
+        font-size: 36px;
+        width: 780px;
+        height: 500px;
         margin: 0 auto;
-        line-height: 25px;
+        line-height: 50px;
         text-indent: 4em;
         color: rgb(255, 255, 255);
-        top: 50px;
         position: relative;
+        top: 80px;
       "
     >
-      GCYY 全称为:Golden Centre of Yin&Yang
-      中文全称为：心绪健康指数
-      GCYY计算源自非二科技首席算法科学家刘承宜教授独家专利授权算法
+      GCYY 全称为“Golden Centre of Yin&Yang”。
+      中文全称为“心绪健康指数”。
+      其计算源自非二科技首席算法科学家刘承宜教授独家专利授权算法。
       心绪健康指数基础原理来自韦伯费希纳定律与诺特定律，基本原理有两点
-      1，主观感受与客观参数成对数关系
-      2，有阴阳就一定有对称性
-      非二将连续的心率、血压等心绪管参数统一定量整合后，得出GCYY心绪健康指数，GCYY指数越高，心绪越健康
+      1:主观感受与客观参数成对数关系,
+      2:有阴阳就一定有对称性。
+      非二将连续的心率、血压等心绪管参数统一定量整合后,得出GCYY心绪健康指数,GCYY指数越高,心绪越健康
     </div>
     <br />
 
@@ -104,12 +102,15 @@
           text-indent: 4em;
         "
         type="button"
-        onclick="{wx.miniProgram.navigateBack({delta: 1});}"
+        onclick="click();"
       >
         返回
       </button>
     </div>
     <script>
+      function click(error, dalta) {
+        wx.miniProgram.navigateBack({ delta: 1 });
+      }
       var timeset = []; //数组初始化
       var data_heart = [];
       var data_pressure_low = [];
@@ -157,10 +158,14 @@
             console.log(data_heart);
 
             var myChart = echarts.init(
-              document.getElementById("main")
+              document.getElementById("main"),
+              null,
+              { renderer: "svg" }
             );
             var myChart2 = echarts.init(
-              document.getElementById("main-2")
+              document.getElementById("main-2"),
+              null,
+              { renderer: "svg" }
             );
 
             option = {

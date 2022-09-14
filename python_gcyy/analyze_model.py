@@ -3,9 +3,10 @@ import numpy as np
 import pymysql
 
 
-print("now, the system is analyzing data ......")
+# print("now, the system is analyzing data ......")
 
 # pd_reader = pd.read_csv("./raw-61data.csv")
+
 file = 'static/csv/raw_data'
 # file = 'tem01'
 
@@ -22,6 +23,9 @@ print("raw data:",df)
 # 调整1，去除体动大于100的数据
 df = df.drop(df[(df['体动'] > 100)].index)
 print("removed data(体动>100):",df)
+
+
+
 
 # temp data cleaning
 # df = df.drop(df[(df['心率'] == 0) | (df['低压'] == 0) | (df['高压'] == 0)].index)

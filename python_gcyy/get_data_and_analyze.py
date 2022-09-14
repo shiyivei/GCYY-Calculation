@@ -6,7 +6,8 @@ import pymysql
 
 def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
-     print ("connect database and fetch data......")
+     # print ("connect database and fetch data......")
+     print ("正在连接数据库获取数据中......")
      #连接数据库
      db = pymysql.connect(
      host='gz-cdb-9avl6ee9.sql.tencentcdb.com',
@@ -66,7 +67,10 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
      #转换数据对象
      data_table = pd.DataFrame(list(rows),columns = ['时间', 'ut', 'dn', 'i', '心率', '低压', '高压', '前面积', '后面积', 'RR', 'step', 'acc_x', 'acc_z', 'acc_y'] )
-     print("raw_data_table:",data_table)
+     # print("raw_data_table:",data_table)
+     print("数据已经成功获取！")
+
+     print("正在整理数据中...")
 
      #重命名
      df_csv =data_table
@@ -89,7 +93,7 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
      df_csv.loc[df_csv["体动"] > 10000,'体动'] = df_csv["体动"].div(10)
      df_csv.loc[df_csv["体动"] > 10000,'体动'] = df_csv["体动"].div(10)
 
-     print("computed file:",df_csv)
+     # print("computed file:",df_csv)
 
      #数据类型转换
      df_csv['时间']=pd.to_datetime(df_csv['时间'],unit='s',origin=pd.Timestamp('1970-01-01'))
@@ -106,15 +110,15 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
      # path_data_filename = "raw_data" + '.csv'
      df_csv.to_csv(path_data_filename,index=False,header=True) 
 
-     print("well, data has been fetched and saved as raw_data.csv......")
-
+     # print("well, data has been fetched and saved as raw_data.csv......")
+     print("已完成数据整理,☑️")
      #执行
      # str = ('python3 /Users/qinjianquan/Desktop/FEIER/GCYY/analyze_model.py')
      str = ('python3 python_gcyy/analyze_model.py')
      p= os.system(str)
 
-     print("congratulations! data analysis finished!")
-     print("--------------------------------")
+     print("正在建模分析中....",p)
+
 
 
 
