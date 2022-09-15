@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="X-UA-Compatible"
+      content="IE=edge"
+    />
+
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
+    <script
+      type="text/javascript"
+      src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"
+    ></script>
+    <title>心绪健康指数</title>
+  </head>
+  <body
+    style="
+      background-color: rgb(0, 0, 0);
+      text-align: center;
+    "
+  >
+    <div
+      style="
+        position: relative;
+        top: 70px;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        font-size: 48px;
+      "
+    >
+      GCYY健康报告
+    </div>
+    <div
+      style="
+        position: relative;
+        top: 200px;
+        color: rgb(255, 255, 255);
+        text-align: center;
+        font-size: 36px;
+      "
+    >
+      Oops! 您的手表采集的数据过少.
+      请佩戴超1小时后再次尝试获取报告
+    </div>
+
+    <div
+      style="
+        text-align: center;
+        position: relative;
+        color: white;
+        top: 300px;
+      "
+    >
+      <button
+        style="
+          font-size: 36px;
+          width: 250px;
+          height: 80px;
+          line-height: 25px;
+        "
+        <!--
+        type="button"
+        onclick="click();"
+        --
+      >
+        返回
+      </button>
+      <script>
+        var oBtn =
+          document.querySelector("button");
+        oBtn.addEventListener(
+          "click",
+          function () {
+            console.log("---click1---");
+            wx.miniProgram.navigateTo({
+              url: "/path/to/page",
+            });
+            console.log("---click2---");
+          }
+        );
+      </script>
+    </div>
+  </body>
+</html>

@@ -38,24 +38,38 @@ def index_handler(request):
           start_time=request.GET.get('start_time',default='0')
           end_time = request.GET.get('end_time',default='0')
 
+
+
           if IMEI_number == '0':
+               from django.shortcuts import render
+               return render(request, 'unbind.html')
 
-               html = "<div style='position: relative;text-align: center;font-size:24px;top:422px;height:500px;background-color: rgb(255, 255, 255);'><h1>未检测到手表，请先绑定</h1><div>"
-               return HttpResponse(html) ;
+          # 时间判断逻辑
+          # if start_time >= end_time:
 
-          if start_time >= end_time:
-
-               html = "<div style='position: relative;text-align: center;font-size:24px;top:422px;height:500px;background-color: rgb(255, 255, 255);'><h1>报告开始时间不能早于结束时间</h1><div>"
-               return HttpResponse(html) 
+          #      html = "<div style='position: relative;text-align: center;font-size:24px;top:422px;height:500px;background-color: rgb(255, 255, 255);'><h1>报告开始时间不能早于结束时间</h1><div>"
+          #      return HttpResponse(html) 
   
           print("Got parameters are:",IMEI_number,start_time,end_time)   
 
-          get_report(IMEI_number,start_time,end_time)
-     
+          if get_report(IMEI_number,start_time,end_time):
+               
+               from django.shortcuts import render
+               return render(request, 'invalid.html')
 
-          from django.shortcuts import render
+          else:
 
-          return render(request, 'index.html')
+               personal_report = 'water_data_' + IMEI_number + '_report' + '.csv'
+
+               print("正在渲染数据:",personal_report)
+
+               context = {}
+               context['personal_report'] = personal_report
+
+               from django.shortcuts import render
+               print("恭喜，数据已渲染完毕🎉🎉🎉")
+               print()
+               return render(request, 'index.html',context)
 
      else:
 
