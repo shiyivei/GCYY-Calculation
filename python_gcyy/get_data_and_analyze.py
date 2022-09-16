@@ -112,15 +112,15 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
           return True
      else:
 
-          OS_BASE_DIR = os.path.abspath(__file__)
-          print("当前文件系统路径是:",OS_BASE_DIR)
+          # OS_BASE_DIR = os.path.abspath(__file__)
+          # print("当前文件系统路径是:",OS_BASE_DIR)
           
 
           HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
           # print("根目录:",HERE)
           # HERE = os.path.join(HERE, '../')
           STATICFILES_DIRS = os.path.join(HERE, 'static/csv/')
-          print("静态文件夹的路径是:",STATICFILES_DIRS)
+          # print("静态文件夹的路径是:",STATICFILES_DIRS)
 
           #保存文件
           # path_data_filename = STATICFILES_DIRS + table_name + '.csv'
@@ -134,29 +134,31 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
      #重命名数据对象
      df = df_csv
-     print("整理后的源数据:")
+     # print("整理后的源数据:")
 
      print("去除体动大于100的数据")
      # 调整1，去除体动大于100的数据
      df = df.drop(df[(df['体动'] > 100)].index)
      # print("removed data(体动>100):",df)
 
-     print("清除异常数据：如血压、心率等于零的数据")
+     print("清除异常数据:如血压、心率等于零的数据")
      # temp data cleaning
      # df = df.drop(df[(df['心率'] == 0) | (df['低压'] == 0) | (df['高压'] == 0)].index)
      # data clean, replace 0 by  1
      df.replace(to_replace = 0, value = 1, inplace=True)
      df = df.drop(columns=['X', 'Y', 'Z', '前面积','后面积','体动'], errors='ignore')
      df = df.drop(df[(df['心率'] == 1) | (df['低压'] == 1) | (df['高压'] == 1) | (df['RR'] == 1)].index)
-
      df = df.drop(df[(df['低压'] < 40) | (df['高压'] < 80)].index)
      # witoutCol = '低压'
      # df = df.drop(columns=[witoutCol])
      df.reset_index(drop=True, inplace=True)
      # print(df)
 
-     print("异常数据处理完毕✅")
-
+     if df.empty:
+          print("去除异常数据后，数据对象为空,无法继续分析")
+          return True
+     else:
+          print("异常数据处理完毕✅")
 
      # ## 一 计算健康标尺
 

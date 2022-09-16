@@ -1,9 +1,6 @@
-from pydoc import plain
-import re
 from django.http import HttpResponse
 from python_gcyy.get_data_and_analyze import connect_and_fetch_data as get_report
 from django.http import FileResponse
-import os
 
 def home_handler(request):
      print("welcome to home page")

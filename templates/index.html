@@ -13,45 +13,119 @@
   </head>
   <body
     style="
-      background-color: rgb(0, 0, 0);
+      background-color: #000000;
       text-align: center;
     "
   >
     <div
       style="
         position: relative;
-        top: 70px;
+        top: 80px;
         color: white;
-        text-align: center;
-        font-size: 48px;
+        font-size: 45px;
+        font-family: Microsoft YaHei;
       "
     >
-      GCYY健康报告
+      GCYY 心绪指数
+    </div>
+    <div
+      style="
+        position: relative;
+        top: 100px;
+        color: rgb(153, 153, 153);
+        font-size: 32px;
+        font-family: Microsoft YaHei;
+      "
+    >
+      Golden Centre of Yin & Yang
     </div>
     <div
       id="main"
       style="
-        height: 450px;
         width: 900px;
+        height: 850px;
         font-size: 12px;
-        background-color: rgb(255, 255, 255);
+        background-color: rgb(38, 38, 38);
         border-radius: 2em;
         position: relative;
-        left: 32px;
-        top: 110px;
+        text-align: center;
+        top: 140px;
+        margin: 0 auto;
       "
     ></div>
+
+    <div
+      style="
+        position: relative;
+        top: 100px;
+        width: 900px;
+        margin: 0 auto;
+      "
+    >
+      <div
+        style="
+          position: relative;
+          text-align: left;
+          left: 200px;
+          color: white;
+          font-size: 30px;
+          /* background-color: rgb(9, 201, 89); */
+          width: 300px;
+          top: 90px;
+        "
+      >
+        <img src="/static/img/lowpressure.png" />
+        心率
+      </div>
+      <div
+        style="
+          position: relative;
+          text-align: center;
+          color: white;
+          font-size: 30px;
+          top: 50px;
+          /* background-color: rgb(9, 201, 89); */
+          width: 300px;
+          left: 300px;
+        "
+      >
+        <img src="/static/img/highpressure.png" />
+        高压
+      </div>
+      <div
+        style="
+          position: relative;
+          text-align: left;
+          top: 43px;
+          left: 500px;
+          margin: 0 auto;
+          color: white;
+          font-size: 30px;
+          top: 10px;
+          /* background-color: rgb(9, 201, 89); */
+          width: 300px;
+          left: 280px;
+        "
+      >
+        <img src="/static/img/heartbrate.png" />
+        低压
+      </div>
+    </div>
+
     <br />
+
     <div
       id="main-2"
       style="
-        position: relative;
         width: 900px;
-        height: 450px;
-        left: 32px;
-        top: 130px;
-        background-color: white;
+        height: 850px;
+        font-size: 12px;
+        background-color: rgb(38, 38, 38);
         border-radius: 2em;
+        position: relative;
+        text-align: center;
+        top: 140px;
+        margin: 0 auto;
       "
     ></div>
 
@@ -65,15 +139,15 @@
     <div
       style="
         text-align: left;
-        font-size: 36px;
+        font-size: 46px;
         width: 850px;
-        height: 450px;
+        height: 400px;
         margin: 0 auto;
-        line-height: 50px;
+        line-height: 70px;
         text-indent: 2em;
         color: rgb(255, 255, 255);
         position: relative;
-        top: 60px;
+        top: 170px;
       "
     >
       GCYY 全称为“Golden Centre of Yin & Yang”。
@@ -82,40 +156,17 @@
       心绪健康指数基础原理来自韦伯费希纳定律与诺特定律，基本原理有两点:
       1,主观感受与客观参数成对数关系;
       2,有阴阳就一定有对称性。
-      非二将连续的心率、血压等心绪管参数统一定量整合后,得出GCYY心绪健康指数,GCYY指数越,心绪越健康
-    </div>
-    <div
-      style="
-        text-align: center;
-        position: relative;
-        color: white;
-        top: 40px;
-      "
-    >
-      <button
-        style="
-          font-size: 36px;
-          width: 250px;
-          height: 80px;
-          line-height: 25px;
-        "
-        <!--
-        type="button"
-        onclick="click();"
-        --
-      >
-        返回
-      </button>
+      非二将连续的心率、血压等心绪管参数统一定量整合后，得出GCYY心绪健康指数，GCYY指数越高，心绪就越健康
     </div>
     <script>
-      var oBtn = document.querySelector("button");
-      oBtn.addEventListener("click", function () {
-        console.log("---click1---");
-        wx.miniProgram.navigateTo({
-          url: "/path/to/page",
-        });
-        console.log("---click2---");
-      });
+      //   var oBtn = document.querySelector("button");
+      //   oBtn.addEventListener("click", function () {
+      //     console.log("---click1---");
+      //     wx.miniProgram.navigateTo({
+      //       url: "/path/to/page",
+      //     });
+      //     console.log("---click2---");
+      //   });
       // function click(error, dalta) {
       //   wx.miniProgram.reLaunch({
       //     url: "https://www.baidu.com/",
@@ -145,26 +196,52 @@
                 new Date(csvdata[i].时间)
               );
               data.push([
-                +new Date(csvdata[i].time),
-                +csvdata[i].GCYY * 100000,
+                +new Date(
+                  csvdata[i].time.replace(
+                    /-/g,
+                    "/"
+                  )
+                ),
+                csvdata[i].GCYY * 100000,
               ]);
               data_heart.push([
-                +new Date(csvdata[i].time),
+                +new Date(
+                  csvdata[i].time.replace(
+                    /-/g,
+                    "/"
+                  )
+                ),
                 +csvdata[i].心率,
               ]);
               data_pressure_low.push([
-                +new Date(csvdata[i].time),
+                +new Date(
+                  csvdata[i].time.replace(
+                    /-/g,
+                    "/"
+                  )
+                ),
                 +csvdata[i].低压,
               ]);
               data_pressure_high.push([
-                +new Date(csvdata[i].time),
+                +new Date(
+                  csvdata[i].time.replace(
+                    /-/g,
+                    "/"
+                  )
+                ),
                 +csvdata[i].高压,
               ]);
               data_rr.push([
-                +new Date(csvdata[i].time),
+                +new Date(
+                  csvdata[i].time.replace(
+                    /-/g,
+                    "/"
+                  )
+                ),
                 +csvdata[i].RR,
               ]);
             }
+
             console.log(data_heart);
 
             var myChart = echarts.init(
@@ -186,12 +263,17 @@
                 },
               },
 
-              legend: {
-                data: [
-                  "GCYY", // "RR",
-                ],
-                top: "6%",
-              },
+              // legend: {
+              //   data: [
+              //     "GCYY", // "RR",
+              //   ],
+              //   top: "4%",
+              //   textStyle: {
+              //     //图例文字的样式
+              //     color: "#DEDEDE",
+              //     fontSize: 20,
+              //   },
+              // },
               title: {
                 left: "center",
                 // text: "water_data_select_out - GCYY Chart",
@@ -209,6 +291,13 @@
               xAxis: {
                 type: "time",
                 boundaryGap: false,
+                axisLabel: {
+                  fontSize: "20",
+                  // fontFamily: "微软雅黑",
+                  marginTop: "35px",
+                  show: true,
+                  color: "white",
+                },
               },
               yAxis: {
                 type: "value",
@@ -216,18 +305,33 @@
                 interval: 50,
                 min: 900,
                 max: 1600,
+                axisLabel: {
+                  fontSize: "20",
+                  // fontFamily: "微软雅黑",
+                  marginTop: "35px",
+                  show: true,
+                  color: "white",
+                },
+                splitLine: {
+                  show: true,
+                  lineStyle: {
+                    color: "#999999",
+                    width: 1,
+                    type: "solid",
+                  },
+                },
               },
-              dataZoom: [
-                {
-                  type: "inside",
-                  start: 0,
-                  end: 100,
-                },
-                {
-                  start: 0,
-                  end: 20,
-                },
-              ],
+              // dataZoom: [
+              //   {
+              //     type: "inside",
+              //     start: 0,
+              //     end: 100,
+              //   },
+              //   {
+              //     start: 0,
+              //     end: 20,
+              //   },
+              // ],
               series: [
                 {
                   name: "GCYY",
@@ -236,6 +340,15 @@
                   symbol: "none",
                   // areaStyle: {},
                   data: data,
+                  color: "white",
+
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: "#47D7FF",
+                      },
+                    },
+                  },
                 },
               ],
             };
@@ -251,15 +364,25 @@
               // 	left: 'center',
               // 	text: 'GCYY Chart'
               // },
-              legend: {
-                data: [
-                  "心率",
-                  "低压",
-                  "高压",
-                  // "RR",
-                ],
-                top: "6%",
-              },
+              // legend: {
+              //   data: [
+              //     "心率",
+              //     "低压",
+              //     "高压",
+              //     // "RR",
+              //   ],
+              //   top: "4%",
+              //   title: {
+              //     left: "center",
+              //     // text: "water_data_select_out - GCYY Chart",
+              //     text: "",
+              //   },
+              //   textStyle: {
+              //     //图例文字的样式
+              //     color: "#FFFFFF",
+              //     fontSize: 28,
+              //   },
+              // },
               toolbox: {
                 feature: {
                   dataZoom: {
@@ -272,24 +395,47 @@
               xAxis: {
                 type: "time",
                 boundaryGap: false,
+                axisLabel: {
+                  fontSize: "20",
+                  // fontFamily: "微软雅黑",
+                  marginTop: "35px",
+                  show: true,
+                  color: "white",
+                },
               },
               yAxis: {
                 type: "value",
                 boundaryGap: [0, "100%"],
+                interval: 10,
                 min: 40,
-                max: 140,
+                max: 160,
+                axisLabel: {
+                  fontSize: "20",
+                  // fontFamily: "微软雅黑",
+                  marginTop: "35px",
+                  show: true,
+                  color: "white",
+                },
+                splitLine: {
+                  show: true,
+                  lineStyle: {
+                    color: "#999999",
+                    width: 1,
+                    type: "solid",
+                  },
+                },
               },
-              dataZoom: [
-                {
-                  type: "inside",
-                  start: 0,
-                  end: 100,
-                },
-                {
-                  start: 0,
-                  end: 20,
-                },
-              ],
+              // dataZoom: [
+              //   {
+              //     type: "inside",
+              //     start: 0,
+              //     end: 100,
+              //   },
+              //   {
+              //     start: 0,
+              //     end: 20,
+              //   },
+              // ],
               series: [
                 {
                   name: "心率",
@@ -298,6 +444,13 @@
                   symbol: "none",
                   // areaStyle: {},
                   data: data_heart,
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: "#00FF7F",
+                      },
+                    },
+                  },
                 },
                 {
                   name: "低压",
@@ -306,6 +459,13 @@
                   symbol: "none",
                   // areaStyle: {},
                   data: data_pressure_low,
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: "#BCBCBC",
+                      },
+                    },
+                  },
                 },
                 {
                   name: "高压",
@@ -314,6 +474,13 @@
                   symbol: "none",
                   // areaStyle: {},
                   data: data_pressure_high,
+                  itemStyle: {
+                    normal: {
+                      lineStyle: {
+                        color: "#A75EFF",
+                      },
+                    },
+                  },
                 },
                 // {
                 //   name: "RR",

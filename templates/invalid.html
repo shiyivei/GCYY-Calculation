@@ -2,20 +2,14 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta
-      http-equiv="X-UA-Compatible"
-      content="IE=edge"
-    />
-
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0"
-    />
+    <title>心绪健康指数</title>
+    <script src="/static/js/echarts.js"></script>
+    <!-- <script src="https://d3js.org/d3.v4.min.js"></script> -->
+    <script src="/static/js/d3.v4.min.js"></script>
     <script
       type="text/javascript"
       src="https://res.wx.qq.com/open/js/jweixin-1.6.0.js"
     ></script>
-    <title>心绪健康指数</title>
   </head>
   <body
     style="
@@ -27,7 +21,7 @@
       style="
         position: relative;
         top: 70px;
-        color: rgb(255, 255, 255);
+        color: white;
         text-align: center;
         font-size: 48px;
       "
@@ -36,53 +30,46 @@
     </div>
     <div
       style="
-        position: relative;
-        top: 200px;
-        color: rgb(255, 255, 255);
-        text-align: center;
+        text-align: left;
         font-size: 36px;
+        width: 850px;
+        height: 450px;
+        margin: 0 auto;
+        line-height: 50px;
+        text-indent: 2em;
+        color: rgb(255, 0, 0);
+        position: relative;
+        top: 270px;
       "
     >
-      Oops! 您的手表采集的数据过少.
+      抱歉!您的手表所采集的数据不合格,
       请佩戴超1小时后再次尝试获取报告
     </div>
 
+    <br />
+    <br />
+
     <div
       style="
-        text-align: center;
+        text-align: left;
+        font-size: 36px;
+        width: 850px;
+        height: 450px;
+        margin: 0 auto;
+        line-height: 50px;
+        text-indent: 2em;
+        color: rgb(255, 255, 255);
         position: relative;
-        color: white;
-        top: 300px;
+        top: 60px;
       "
     >
-      <button
-        style="
-          font-size: 36px;
-          width: 250px;
-          height: 80px;
-          line-height: 25px;
-        "
-        <!--
-        type="button"
-        onclick="click();"
-        --
-      >
-        返回
-      </button>
-      <script>
-        var oBtn =
-          document.querySelector("button");
-        oBtn.addEventListener(
-          "click",
-          function () {
-            console.log("---click1---");
-            wx.miniProgram.navigateTo({
-              url: "/path/to/page",
-            });
-            console.log("---click2---");
-          }
-        );
-      </script>
+      GCYY 全称为“Golden Centre of Yin & Yang”。
+      中文全称为“心绪健康指数”。
+      其计算源自非二科技首席算法科学家刘承宜教授独家专利授权算法。
+      心绪健康指数基础原理来自韦伯费希纳定律与诺特定律，基本原理有两点:
+      1,主观感受与客观参数成对数关系;
+      2,有阴阳就一定有对称性。
+      非二将连续的心率、血压等心绪管参数统一定量整合后,得出GCYY心绪健康指数,GCYY指数越高,心绪就越健康
     </div>
   </body>
 </html>
