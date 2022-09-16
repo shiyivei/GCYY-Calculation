@@ -5,6 +5,7 @@ import os
 import scipy
 from scipy import stats
 import math
+import time
 
 def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
@@ -47,17 +48,15 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
      part_table_name = 'water_data_'
      table_name = part_table_name + IMEI_number
 
-     # 1. 按时间查询
-     # sql = 'select * from ' + table_name + ' where time >= %s and time < %s' 
-     # args = start_time,end_time
-
-     # 执行查询并返回结果
-     # cursor.execute(sql,args)
 
      # 2. 按数量查询
-     sql = 'select * from ' + table_name + ' order by time desc limit 0,7200'
-     cursor.execute(sql)
+     # sql = 'select * from ' + table_name + ' order by time desc limit 0,7200'
+     # cursor.execute(sql)
 
+
+     # 3.先按数量再按时间查询
+     sql = 'select * from ' + table_name + ' order by time desc limit 0,1'
+     cursor.execute(sql)
 
      #返回查询到的数据
      rows = cursor.fetchall()
@@ -71,9 +70,52 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
      else:
           print("数据已经成功获取！")
+          print("获取到的第一行数据表为:",data_table)
+
+     fixed_end_time = int(data_table.iloc[[0],[0]].values[0][0])
+     fixed_start_time = fixed_end_time - 60 * 60 * 6     
+
+     # fixed_end_time = 1662476296
+     # fixed_start_time = 1662462031
+
+     print("unix timestamp:",fixed_start_time,fixed_end_time)
+
+     local_end_time = time.localtime(fixed_end_time)
+     local_start_time = time.localtime(fixed_start_time)
+     tmp_end_time = time.strftime("%Y-%m-%d %H:%M:%S",local_end_time)
+     tmp_start_time = time.strftime("%Y-%m-%d %H:%M:%S",local_start_time)
+
+     print("最近结束时间为",tmp_end_time)
+     print("最近开始时间为",tmp_start_time)
+
+     # 1. 按时间查询
+     sql_by_time = 'select * from ' + table_name + ' where time >= %s and time < %s' 
+     args_by_time = fixed_start_time,fixed_end_time
+     # args_by_time = start_time,end_time
+
+
+     print("sql 语句:",sql_by_time)
+
+     # 执行查询并返回结果
+     cursor.execute(sql_by_time,args_by_time)
+
+     #返回查询到的数据
+     rows_by_time = cursor.fetchall()
+     # print("result:", rows_by_time)
+
+     #使用pandas转换数据对象
+     data_table_second_query = pd.DataFrame(list(rows_by_time),columns = ['时间', 'ut', 'dn', 'i', '心率', '低压', '高压', '前面积', '后面积', 'RR', 'step', 'acc_x', 'acc_z', 'acc_y'] )
+    
+     if data_table_second_query.empty:
+          print("Sorry,未获取到任何数据,数据对象为空")
+          return True
+
+     else:
+          print("数据已经成功获取！")
+          print("data_table_second_query:",data_table_second_query)
 
      #重命名
-     df_csv =data_table
+     df_csv =data_table_second_query
 
      print("正在计算体动...")
      #整理数据，计算体动
