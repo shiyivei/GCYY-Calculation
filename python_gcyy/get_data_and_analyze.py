@@ -141,7 +141,9 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
 
      #数据类型转换
-     df_csv['时间']=pd.to_datetime(df_csv['时间'],unit='s',origin=pd.Timestamp('1970-01-01'))
+     df_csv['时间']=pd.to_datetime(df_csv['时间'].values,utc=True,unit='s').tz_convert("Asia/Shanghai")
+     
+     # print("时间转化后的数据:",df_csv)
 
      #删除无效行
      df_csv.drop(df_csv.tail(2).index,inplace=True)
