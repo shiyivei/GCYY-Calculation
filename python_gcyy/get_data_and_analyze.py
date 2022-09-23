@@ -1,3 +1,4 @@
+import imp
 import pandas as pd
 import numpy as np
 import pymysql
@@ -6,6 +7,12 @@ import scipy
 from scipy import stats
 import math
 import time
+import datetime as dt
+import sqlalchemy
+from sqlalchemy import create_engine
+import json
+import requests
+
 
 def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
@@ -14,7 +21,7 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
      print ("报告分析中🤔🤔🤔")
      print("------------------------------------------------")
 
-     print ("正在连接数据库获取数据...")
+     print ("正在连接数据库获取数据")
 
      db = pymysql.connect(
      host='gz-cdb-9avl6ee9.sql.tencentcdb.com',
@@ -24,77 +31,63 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
      charset='utf8'
      )
 
-     #创建游标
+     # 创建游标
      cursor = db.cursor()
 
-     #查看数据库
-     cursor.execute("show databases")
-
-     #接收查询结果
-     DBs = cursor.fetchall() #返回的数据结果是元组
-     # print("databases are:",DBs)
-
-
-     #进入water数据库
+     # 进入water数据库
      cursor.execute("use water")
-     #查看数据表
+
+     # 查看数据表
      cursor.execute("show tables")
 
-     #查看数据表
+     # 查看数据表
      water_tables = cursor.fetchall()
-     # print("tables are:",water_tables)
 
-     #用户数据表名称
+     # 用户数据表名
      part_table_name = 'water_data_'
      table_name = part_table_name + IMEI_number
 
+     # 查询条件（获取时间戳）
+     latest_timestamp_query = 'SELECT * FROM `water`.`water_data_end_time` WHERE `sn` = "'+ IMEI_number +'" LIMIT 0,1'
 
-     # 2. 按数量查询
-     # sql = 'select * from ' + table_name + ' order by time desc limit 0,7200'
-     # cursor.execute(sql)
+     # print("查询数据表最近更新时间语句:",latest_timestamp_query)
 
+     cursor.execute(latest_timestamp_query)
 
-     # 3.先按数量再按时间查询
-     sql = 'select * from ' + table_name + ' order by time desc limit 0,1'
-     cursor.execute(sql)
+     data_back = cursor.fetchall()
+     # print("获取到表最后更新的数据是:",data_back)
 
-     #返回查询到的数据
-     rows = cursor.fetchall()
-
-     #使用pandas转换数据对象
-     data_table = pd.DataFrame(list(rows),columns = ['时间', 'ut', 'dn', 'i', '心率', '低压', '高压', '前面积', '后面积', 'RR', 'step', 'acc_x', 'acc_z', 'acc_y'] )
-    
-     if data_table.empty:
+     # 转换数据对象
+     df_timestamp = pd.DataFrame(list(data_back))
+     if df_timestamp.empty:
           print("未获取到任何数据,数据对象为空")
           return True
 
      else:
-          print("数据已经成功获取！")
-          print("获取到的第一行数据表为:",data_table)
+          print("截止时间戳已经成功获取✅")
+          # print("获取到的第一行数据表为:",df_timestamp)
 
-     fixed_end_time = int(data_table.iloc[[0],[0]].values[0][0])
-     fixed_start_time = fixed_end_time - 60 * 60 * 6     
+     end_time = int(df_timestamp.iloc[[0],[1]].values[0][0])
 
-     # fixed_end_time = 1662476296
-     # fixed_start_time = 1662462031
+     start_time = end_time - 60 * 60 * 6 
 
-     print("unix timestamp:",fixed_start_time,fixed_end_time)
+     # print("报告开始时间和结束时间:",start_time,end_time)
 
-     local_end_time = time.localtime(fixed_end_time)
-     local_start_time = time.localtime(fixed_start_time)
-     tmp_end_time = time.strftime("%Y-%m-%d %H:%M:%S",local_end_time)
-     tmp_start_time = time.strftime("%Y-%m-%d %H:%M:%S",local_start_time)
+     local_end_time = time.localtime(end_time)
+     local_start_time = time.localtime(start_time)
+     shanghai_end_time = time.strftime("%Y-%m-%d %H:%M:%S",local_end_time)
+     shanghai_start_time = time.strftime("%Y-%m-%d %H:%M:%S",local_start_time)
 
-     print("最近结束时间为",tmp_end_time)
-     print("最近开始时间为",tmp_start_time)
+     
+     print("报告开始时间:",shanghai_start_time)
+     print("报告结束时间:",shanghai_end_time)
 
-     # 1. 按时间查询
+
+     # 截取数据
      sql_by_time = 'select * from ' + table_name + ' where time >= %s and time < %s' 
-     args_by_time = fixed_start_time,fixed_end_time
-     # args_by_time = start_time,end_time
+     args_by_time = start_time,end_time
 
-
-     print("sql 语句:",sql_by_time)
+     # print("查询数据表某段时间数据的语句:",sql_by_time)
 
      # 执行查询并返回结果
      cursor.execute(sql_by_time,args_by_time)
@@ -111,13 +104,13 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
           return True
 
      else:
-          print("数据已经成功获取！")
-          print("data_table_second_query:",data_table_second_query)
+          print("数据已经成功获取✅")
+          # print("data_table_second_query:",data_table_second_query)
 
      #重命名
      df_csv =data_table_second_query
 
-     print("正在计算体动...")
+     print("正在计算体动")
      #整理数据，计算体动
      df_csv["add_xyz"] = df_csv["acc_x"] + df_csv["acc_z"] + df_csv["acc_y"]
 
@@ -155,44 +148,30 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
           print("整理后的数据对象为空,无法继续分析")
           return True
      else:
-
-          # OS_BASE_DIR = os.path.abspath(__file__)
-          # print("当前文件系统路径是:",OS_BASE_DIR)
-          
-
           HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-          # print("根目录:",HERE)
-          # HERE = os.path.join(HERE, '../')
           STATICFILES_DIRS = os.path.join(HERE, 'static/csv/')
-          # print("静态文件夹的路径是:",STATICFILES_DIRS)
-
-          #保存文件
-          # path_data_filename = STATICFILES_DIRS + table_name + '.csv'
-          # df_csv.to_csv(path_data_filename,index=False,header=True) 
-
-          # print("文件已经保存✅")
-
-     # print("well, data has been fetched and saved as raw_data.csv......")
-     print("已完成数据整理")
+          print("正在转换数据对象，进一步分析")
 
 
      #重命名数据对象
      df = df_csv
      # print("整理后的源数据:")
 
-     print("去除体动大于100的数据")
      # 调整1，去除体动大于100的数据
      df = df.drop(df[(df['体动'] > 100)].index)
      # print("removed data(体动>100):",df)
 
-     print("清除异常数据:如血压、心率等于零的数据")
+     # print("清除异常数据:如血压、心率等于零的数据")
      # temp data cleaning
      # df = df.drop(df[(df['心率'] == 0) | (df['低压'] == 0) | (df['高压'] == 0)].index)
      # data clean, replace 0 by  1
      df.replace(to_replace = 0, value = 1, inplace=True)
      df = df.drop(columns=['X', 'Y', 'Z', '前面积','后面积','体动'], errors='ignore')
+     # print("丢弃不必要的数据列")
      df = df.drop(df[(df['心率'] == 1) | (df['低压'] == 1) | (df['高压'] == 1) | (df['RR'] == 1)].index)
+     # print("丢弃心率、低压、高压、RR等于1的数据")
      df = df.drop(df[(df['低压'] < 40) | (df['高压'] < 80)].index)
+     # print("丢弃低压低于40高压高于80的数据")
      # witoutCol = '低压'
      # df = df.drop(columns=[witoutCol])
      df.reset_index(drop=True, inplace=True)
@@ -202,7 +181,7 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
           print("去除异常数据后，数据对象为空,无法继续分析")
           return True
      else:
-          print("异常数据处理完毕✅")
+          print("分析处理完毕✅")
 
      # ## 一 计算健康标尺
 
@@ -211,7 +190,7 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
 
      # Geometric Mean of the column in dataframe
 
-     print("正在使用scipy进行高级处理...")
+     print("正在使用scipy进行高级处理")
      
      # print(len(df.columns)) 
      ##scipy.stats.gmean(df.iloc[:,1:7],axis=0)
@@ -435,7 +414,7 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
      df_all = df_all.drop(df_all[(df_all['GCYY'] == 1)].index)
      # df_csv = pd.concat([df_all, df_yin], axis=1, join='inner')
      output = STATICFILES_DIRS + table_name + '_report' + '.csv'
-     print("分析报告已保存至:",output)
+     # print("分析报告已保存至:",output)
      df_csv = df_all.copy()
      # print(df_csv)
      for (index, colname) in enumerate(df_csv):
@@ -454,5 +433,60 @@ def connect_and_fetch_data(IMEI_number,start_time,end_time):
      # print(mean_df)
 
      mean_df.to_csv(output, index=False)
+     print("正在保存CSV文件")
+     print("文件已经保存✅")
+
      print("------------------------------------------------")
      print("报告分析已完成🎉🎉🎉")
+
+     now_time = dt.datetime.now().strftime('%F %T')
+     print("报告出具时间:",now_time)
+
+     # 将文件上传至IPFS
+
+     construct_file_name_and_upload_csv_file(IMEI_number)
+
+     # 将整理后的数据直接保存到数据库
+     
+     # create_engine("数据库类型+数据库驱动://数据库用户名:数据库密码@IP地址:端口/数据库"，其他参数)
+     # engine=create_engine("mysql+pymysql://root:2022jianquanqin,@localhost:3306/water_data_analyzed",echo=True)
+     # df_csv.to_sql(name=table_name, con=engine, index=False, if_exists='replace')
+     # print("store data successfully")
+
+
+# 获取文件目录
+HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+STATICFILES_DIRS = os.path.join(HERE, 'static/csv/')
+
+GATEWAY = "https://api-ap-singapore-1.getway.sinso.io"
+URL = "/v1/upload"
+CONTENT_TYPE = "text/csv"
+FILE_PATH = STATICFILES_DIRS
+
+FILENAME = "*"
+TOKEN = "34b6b494bb0111ec8a58020017009841"
+
+
+def upload(url, token, content_type, file):
+    headers = {
+        "Content-Type": content_type,
+        "Token": token
+    }
+    params = {
+        "name": FILENAME
+    }
+    response = requests.post(url=url, data=file, headers=headers, params=params)
+    print(response.text)
+
+def construct_file_name_and_upload_csv_file(IMEI_number):
+     
+     FILENAME = 'water_data_' + IMEI_number + '_report' + '.csv'
+
+     print("文件名称是:",FILENAME)
+
+     print("文件查找路径是:",FILE_PATH)
+
+     f = open(os.path.join(FILE_PATH, FILENAME), "rb")
+     upload(GATEWAY+URL, TOKEN, CONTENT_TYPE, f)
+
+     print("文件已经上传至IPFS layer2 网络 Sinso")

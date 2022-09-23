@@ -137,10 +137,10 @@
     <br />
 
     <div
-      id="main"
+      id="main-3"
       style="
         width: 900px;
-        height: 800px;
+        height: 2850px;
         font-size: 12px;
         background-color: rgb(38, 38, 38);
         border-radius: 2em;
@@ -158,19 +158,101 @@
           height: 300px;
           margin: 0 auto;
           line-height: 70px;
-          text-indent: 2em;
+
           color: rgb(255, 255, 255);
           position: relative;
           top: 50px;
         "
       >
-        GCYY 全称为“Golden Centre of Yin & Yang”。
-        中文全称为“心绪健康指数”。
-        其计算源自非二科技首席算法科学家刘承宜教授独家专利授权算法。
-        心绪健康指数基础原理来自韦伯费希纳定律与诺特定律，基本原理有两点:
-        1,主观感受与客观参数成对数关系;
-        2,有阴阳就一定有对称性。
-        非二将连续的心率、血压等心绪管参数统一定量整合后，得出GCYY心绪健康指数，GCYY指数越高，心绪就越健康
+        <div
+          style="
+            text-align: center;
+            font-size: 45px;
+            line-height: 100px;
+          "
+        >
+          GCYY介绍
+        </div>
+
+        <div
+          style="
+            font-size: 42px;
+            text-indent: 1.5em;
+            line-height: 100px;
+          "
+        >
+          1. 数据流的整合表征
+        </div>
+        <div
+          style="
+            font-size: 40px;
+            text-indent: 1.5em;
+          "
+        >
+          脉诊手表检测到的数据流可以表示为，横向N个参数，纵向M个取值。
+          横向N个参数可以用它们的几何均值整合表征，因此，“横向N个参数，纵向M个取值”可以表示为“M个几何均值”
+        </div>
+
+        <div
+          style="
+            font-size: 42px;
+            text-indent: 1.5em;
+            line-height: 100px;
+          "
+        >
+          2. 守恒数据流
+        </div>
+        <div
+          style="
+            font-size: 40px;
+            text-indent: 1.5em;
+          "
+        >
+          计算机之父冯诺依曼指出，稳定的过程可以预测，不稳定的过程只能控制。
+          调整N个参数（例如，取某个参数的倒数），纵向排除异常值，使剩余的几何均值之间的定量差异小于定量差异的最小阈值，称为系统守恒。满足系统守恒的几何均值称为时中（golden
+          center,
+          GC）。时中守恒的说明存在稳定过程，用于计算时中的参数相对完整
+        </div>
+        <div
+          style="
+            font-size: 42px;
+            text-indent: 1.5em;
+            line-height: 100px;
+          "
+        >
+          3. GCYY
+        </div>
+        <div
+          style="
+            font-size: 40px;
+            text-indent: 1.5em;
+          "
+        >
+          用于时中计算的参数中，从疾病到健康，上升的参数称为阳性参数，下降的参数称为阴性参数，两类参数相互平衡，所有参数的几何均值满足系统守恒。
+          将阴性参数取倒数，然后再与阳性参数联合计算几何均值，称为健康标尺（GC
+          of yin and yang,
+          GCYY）。从疾病到健康，GCYY增加。GCYY表征了参数之间的互动，对于健康人，GCYY还表征所讨论的参数的互动所反映的心绪，GCYY增加、下降或不变是心绪变好、变坏或不变
+        </div>
+
+        <div
+          style="
+            font-size: 42px;
+            text-indent: 1.5em;
+            line-height: 100px;
+          "
+        >
+          4. GCYY的解读
+        </div>
+        <div
+          style="
+            font-size: 40px;
+            text-indent: 1.5em;
+          "
+        >
+          按照冯诺依曼的思想，稳定的过程可以预测，不稳定的过程只能控制。
+          如果GCYY有明显的增加、下降或不变，表示机体处于稳定过程，表示健康人的心绪变好、变坏或不变，或者表示患者的健康变好、变坏或不变。
+          如果GCYY没有明显的增加、下降或不变，只是较大的波动，表示机体处于不稳定过程，只能用习惯性行为来控制。所谓习惯性行为，就是用生物节律固定下来的行为，也就是经常重复的行为，例如，拿筷子吃饭。习惯性行为的水平越高，控制效果越好
+        </div>
       </div>
     </div>
     <script>
@@ -194,8 +276,12 @@
       var data_rr = [];
       let data = [];
       //获取csv对象
+      // d3.csv(
       d3.csv(
-        "/static/csv/{{personal_report}}",
+        // "http://127.0.0.1/datasource/?IMEI_number={{IMEI_number}}",
+        "/static/csv/1.csv",
+        // "/static/csv/{{personal_report}}",
+        // "https://download.getway.sinso.io/sinso/6dfc888c043494f1c0fb8af5453bb70f45bd805760502339de1edf998dbe80e3",
         function (error, csvdata) {
           console.log("raw data:", csvdata);
           if (error) {

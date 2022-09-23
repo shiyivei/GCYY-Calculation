@@ -15,29 +15,23 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-
 from python_gcyy.views import home_handler
 from python_gcyy.views import index_handler
-# from python_gcyy.views import echarts_handler
-# from python_gcyy.views import d3_handler
 from python_gcyy.views import txt_handler
+from python_gcyy.views import data_source
+
+
 
 urlpatterns = [
-
-    # urls = {
-    #       '/index':index,
-    #       '/home':home,
-    #       '/t018ESSzw1.txt':key
-    #  }
 
     path('admin/', admin.site.urls),
    
     path('home/', home_handler),
-     # 128.0.0.1:80/home?IMEI_number=F929435DD002&start_time=1662448705&end_time=1662535105
-    path('index/', index_handler),
-    # path('echarts/', echarts_handler),
-    # path('d3/', d3_handler),
-    path('t018ESSzw1.txt/',txt_handler),
     
+    path('index/', index_handler),
+ 
+    path('t018ESSzw1.txt/',txt_handler),
+
+    path('datasource/',data_source,name='datasource'),
+
 ]
